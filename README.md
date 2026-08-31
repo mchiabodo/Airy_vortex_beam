@@ -1,7 +1,7 @@
 # 2D Airy Beam with Optical Vortex — Propagation Simulator
 
-A self-contained Python program that simulates how a **2D Airy beam carrying an
-optical vortex** propagates through free space, and measures how the vortex's
+A Python package that simulates how a **2D Airy beam carrying an optical
+vortex** propagates through free space, and measures how the vortex's
 topological charge affects the beam's trajectory and its orbital angular
 momentum (OAM).
 
@@ -54,12 +54,27 @@ module with its own parameters at the top of its `run()` function.
 
 ## Getting started
 
+Install the dependencies once:
+
 ```bash
 pip install -r requirements.txt
+```
+
+Then run any mode from the repository root:
+
+```bash
 python main.py oam        # or: single, charges, loi, profil1D
 ```
 
 Running `python main.py` with no argument defaults to the `oam` mode.
+
+### Tuning the parameters
+
+Each mode keeps its physical and numerical settings (wavelength, charge `m`,
+vortex position, grid size `Nx`, propagation distance, etc.) at the top of the
+`run()` function in its own module — for example edit `airy/mode_single.py` to
+change the `single` run. The shared physics in `airy/core.py` does not need to
+be touched to explore different cases.
 
 ## Project structure
 
