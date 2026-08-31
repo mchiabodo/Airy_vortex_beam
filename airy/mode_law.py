@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ============================================================================
-# MODE "loi": drift law + map.
+# MODE "law": drift law + map.
 # Builds on the central physical result: the center of mass follows an EXACT
 # LAW (Ehrenfest), its drift velocity being given by the transverse momentum of
 # the initial field.

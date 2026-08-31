@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ============================================================================
-# MODE "profil1D": I(x) and I(y) cuts along the main lobe.
+# MODE "profile1d": I(x) and I(y) cuts along the main lobe.
 # Simulate a single charge, and display the 1D INTENSITY PROFILE along X and Y,
 # at the main-lobe position (automatically tracked by the intensity maximum).
 # Interactive figure (z slider) + GIF. Highlights the deformation of the profile
