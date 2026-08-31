@@ -44,13 +44,13 @@ From the propagated field the code extracts two main observables:
 Choose a mode on the command line (see below). Each mode is a self-contained
 module with its own parameters at the top of its `run()` function.
 
-| `mode`     | What it does |
-|------------|--------------|
-| `single`   | Propagates one charge `m`; interactive intensity/phase viewer with a `z` slider, plus a center-of-mass analysis figure and a GIF. |
-| `charges`  | Runs several charges `m` and overlays their center-of-mass trajectories to show how the vortex deflects the beam. |
-| `loi`      | Compares the measured drift velocity against the value predicted analytically from the initial field alone, and maps the drift versus vortex position. |
-| `oam`      | Computes `⟨Lz⟩/ℏ` for each charge: validates it against `m` and checks its conservation during propagation. |
-| `profil1D` | Tracks the main lobe and plots the 1D intensity profiles `I(x)`, `I(y)` through it; interactive viewer + GIF. |
+| `mode`      | What it does |
+|-------------|--------------|
+| `single`    | Propagates one charge `m`; interactive intensity/phase viewer with a `z` slider, plus a center-of-mass analysis figure and a GIF. |
+| `charges`   | Runs several charges `m` and overlays their center-of-mass trajectories to show how the vortex deflects the beam. |
+| `law`       | Compares the measured drift velocity against the value predicted analytically from the initial field alone, and maps the drift versus vortex position. |
+| `oam`       | Computes `⟨Lz⟩/ℏ` for each charge: validates it against `m` and checks its conservation during propagation. |
+| `profile1d` | Tracks the main lobe and plots the 1D intensity profiles `I(x)`, `I(y)` through it; interactive viewer + GIF. |
 
 ## Getting started
 
@@ -63,7 +63,7 @@ pip install -r requirements.txt
 Then run any mode from the repository root:
 
 ```bash
-python main.py oam        # or: single, charges, loi, profil1D
+python main.py oam        # or: single, charges, law, profile1d
 ```
 
 Running `python main.py` with no argument defaults to the `oam` mode.

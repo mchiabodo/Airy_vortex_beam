@@ -5,9 +5,9 @@
 #
 #     python main.py single      -> one charge m (interactive figures + GIF)
 #     python main.py charges     -> center-of-mass trajectory for several charges
-#     python main.py loi         -> drift law (measured vs predicted) + map
+#     python main.py law         -> drift law (measured vs predicted) + map
 #     python main.py oam         -> orbital angular momentum <Lz> (default)
-#     python main.py profil1D    -> 1D cuts I(x), I(y) along the main lobe + GIF
+#     python main.py profile1d   -> 1D cuts I(x), I(y) along the main lobe + GIF
 #
 # With no argument, the "oam" mode is run.
 # ============================================================================
@@ -27,11 +27,11 @@ plt.rcParams['figure.dpi'] = 150   # higher-resolution figures for readability
 from airy import mode_single, mode_charges, mode_law, mode_oam, mode_profile1d
 
 MODES = {
-    "single":   lambda: mode_single.run(),
-    "charges":  lambda: mode_charges.run(m_values=(0, 1, 2, 3, 4, 5), limit_frame=150),
-    "loi":      lambda: mode_law.run(m_values=(0, 1, 2, 3, 4, 5)),
-    "oam":      lambda: mode_oam.run(m_values=(0, 1, 2, 3, 4, 5)),
-    "profil1D": lambda: mode_profile1d.run(),
+    "single":    lambda: mode_single.run(),
+    "charges":   lambda: mode_charges.run(m_values=(0, 1, 2, 3, 4, 5), limit_frame=150),
+    "law":       lambda: mode_law.run(m_values=(0, 1, 2, 3, 4, 5)),
+    "oam":       lambda: mode_oam.run(m_values=(0, 1, 2, 3, 4, 5)),
+    "profile1d": lambda: mode_profile1d.run(),
 }
 
 
