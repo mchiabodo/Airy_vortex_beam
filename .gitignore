@@ -1,0 +1,37 @@
+# ---- Fichiers privés : NON publiés sur GitHub (gardés en local uniquement) ----
+LISEZ-MOI.txt
+0_Revue_bibliographique/
+1_Rapport_de_synthese/
+2_Mode_d_emploi/
+3_Diapositives/
+5_Etude_autoguerison/
+
+# ---- Fichiers lourds : animations de démonstration (dispo sur demande) ----
+# Les GIFs pèsent plusieurs centaines de Mo au total ; on ne les versionne pas.
+*.gif
+4_GIFs_soutenance/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ---- LaTeX (fichiers auxiliaires de compilation) ----
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.bbl
+*.blg
+
+# ---- OS / éditeurs ----
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
