@@ -5,9 +5,10 @@ optical vortex** propagates through free space, and measures how the vortex's
 topological charge affects the beam's trajectory and its orbital angular
 momentum (OAM).
 
-Everything lives in a single file, [`Airy.py`](Airy.py): the physics, the
-numerics, and five ready-made analysis modes with interactive figures and
-animated GIF export.
+The project is organised as a small Python package: the shared physics lives in
+[`airy/core.py`](airy/core.py), each of the five analysis modes is its own
+module, and [`main.py`](main.py) is the command-line entry point. Every mode
+provides interactive figures and animated GIF export.
 
 ## What it computes
 
@@ -40,8 +41,8 @@ From the propagated field the code extracts two main observables:
 
 ## Run modes
 
-Pick a mode with the `mode` variable at the bottom of `Airy.py`, then run the
-file. Each mode is a self-contained function with its own parameters at the top.
+Choose a mode on the command line (see below). Each mode is a self-contained
+module with its own parameters at the top of its `run()` function.
 
 | `mode`     | What it does |
 |------------|--------------|
@@ -54,15 +55,28 @@ file. Each mode is a self-contained function with its own parameters at the top.
 ## Getting started
 
 ```bash
-pip install numpy scipy matplotlib pillow
-python Airy.py
+pip install -r requirements.txt
+python main.py oam        # or: single, charges, loi, profil1D
 ```
 
-Then edit the `mode` line at the bottom of `Airy.py` to choose what to run.
+Running `python main.py` with no argument defaults to the `oam` mode.
 
-## Code structure
+## Project structure
 
-The physics is factored into small, single-purpose helper functions:
+```
+main.py                    command-line entry point (dispatches to a mode)
+requirements.txt           dependencies
+airy/
+├── core.py                shared physics (grid, propagator, field, observables)
+├── mode_single.py         one charge m: intensity/phase viewer + GIF
+├── mode_charges.py        center-of-mass trajectory vs charge
+├── mode_law.py            drift law (measured vs predicted) + map
+├── mode_oam.py            orbital angular momentum <Lz>
+└── mode_profile1d.py      1D intensity profiles along the main lobe
+```
+
+The shared physics in `airy/core.py` is factored into small, single-purpose
+functions:
 
 | Function | Role |
 |----------|------|
@@ -77,7 +91,8 @@ The physics is factored into small, single-purpose helper functions:
 | `params_caption`            | Reproducible-parameters banner drawn on every figure. |
 
 The code is fully commented in English, with a reference header at the top of
-`Airy.py` explaining the model, the normalization and the numerical conventions.
+`airy/core.py` explaining the model, the normalization and the numerical
+conventions.
 
 ## Requirements
 
