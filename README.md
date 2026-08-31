@@ -1,80 +1,84 @@
-# 2D Airy Beam + Optical Vortex — Numerical Simulation
+# 2D Airy Beam with Optical Vortex — Propagation Simulator
 
-Simulation of the **free propagation of a 2D Airy beam carrying an optical
-vortex** (orbital angular momentum, OAM), in the paraxial regime, using the
-**split-step Fourier method** (Beam Propagation Method).
+A self-contained Python program that simulates how a **2D Airy beam carrying an
+optical vortex** propagates through free space, and measures how the vortex's
+topological charge affects the beam's trajectory and its orbital angular
+momentum (OAM).
 
-Research project: correction and validation of an existing propagation code,
-then derivation of an **analytical law for the drift of the beam's center of
-mass** and its numerical verification.
+Everything lives in a single file, [`Airy.py`](Airy.py): the physics, the
+numerics, and five ready-made analysis modes with interactive figures and
+animated GIF export.
 
-## Physical overview
+## What it computes
 
-The initial field (at `z = 0`) is a truncated 2D Airy beam multiplied by an
-optical vortex of topological charge `m`, centered at `(x_v, y_v)`:
-
-```
-A(x,y,0) = Ai(x/x₀)·Ai(y/x₀)·exp(a(x+y)/x₀) · ρ^|m|·exp(i m φ)
-           └────────── truncated 2D Airy ─────────┘   └─ OAM vortex ─┘
-```
-
-It is propagated with the paraxial (optical Schrödinger) equation
+The beam starts as a truncated 2D Airy field multiplied by an optical vortex of
+integer charge `m`:
 
 ```
-2 i k₀ ∂A/∂z + ∇⊥²A = 0
+A(x, y, 0) = Ai(x/x₀)·Ai(y/x₀)·exp(a(x+y)/x₀) · ρ^|m|·exp(i·m·φ)
 ```
 
-solved **exactly in Fourier space** at each step: `Â *= exp(-i K² dz')`.
+and is propagated with the paraxial wave equation
 
-## Key results
+```
+2·i·k₀·∂A/∂z + ∇⊥²A = 0
+```
 
-- **Energy conserved at 100%** and a **straight** center-of-mass trajectory
-  (R² = 1.0000), consistent with Ehrenfest's theorem — after fixing an
-  apodization bug that artificially bent the trajectory.
-- **Exact analytical drift law**: `⟨r⟩(z) = ⟨r⟩(0) + (⟨k⊥⟩/k₀)·z`, with the
-  slope predicted without propagation and a measured/predicted agreement
-  **< 0.5%**.
-- **Orbital angular momentum** `⟨Lz⟩/ℏ ≈ m`, conserved in free propagation
-  (slope 0.995 ; R² = 0.999).
+solved with the **split-step Fourier method** (Beam Propagation Method): at each
+step the field is taken to Fourier space, multiplied by the exact spectral
+propagator `exp(-i·K²·dz)`, and transformed back. Free propagation is treated as
+lossless — the edge (Tukey) window is applied only once, at injection, so energy
+is preserved and the center-of-mass motion stays physically correct.
 
-## Features
+From the propagated field the code extracts two main observables:
 
-The simulation file contains **5 modes**, selected via the `mode` variable at
-the bottom of the file:
+- the **center of mass** `⟨r⟩(z)` — the brightness-weighted position of the beam,
+  which drifts in a straight line whose velocity is set by the initial field's
+  mean transverse momentum;
+- the **orbital angular momentum** `⟨Lz⟩/ℏ` — computed with pseudo-spectral
+  derivatives, expected to be close to the charge `m` and conserved along `z`.
 
-| Mode        | What it produces                                             |
-|-------------|--------------------------------------------------------------|
-| `single`    | Intensity / phase for one charge `m` + GIF                  |
-| `charges`   | Center-of-mass trajectory for `m = 0..5`                    |
-| `loi`       | Drift law (measured vs predicted) + map                    |
-| `oam`       | Orbital angular momentum `⟨Lz⟩` (validation + conservation) |
-| `profil1D`  | 1D cuts I(x), I(y) along the main lobe + GIF               |
+## Run modes
 
-## Run
+Pick a mode with the `mode` variable at the bottom of `Airy.py`, then run the
+file. Each mode is a self-contained function with its own parameters at the top.
+
+| `mode`     | What it does |
+|------------|--------------|
+| `single`   | Propagates one charge `m`; interactive intensity/phase viewer with a `z` slider, plus a center-of-mass analysis figure and a GIF. |
+| `charges`  | Runs several charges `m` and overlays their center-of-mass trajectories to show how the vortex deflects the beam. |
+| `loi`      | Compares the measured drift velocity against the value predicted analytically from the initial field alone, and maps the drift versus vortex position. |
+| `oam`      | Computes `⟨Lz⟩/ℏ` for each charge: validates it against `m` and checks its conservation during propagation. |
+| `profil1D` | Tracks the main lobe and plots the 1D intensity profiles `I(x)`, `I(y)` through it; interactive viewer + GIF. |
+
+## Getting started
 
 ```bash
 pip install numpy scipy matplotlib pillow
 python Airy.py
 ```
 
-Open `Airy.py`, set the `mode` variable at the bottom of the file to the mode
-you want, then run it.
+Then edit the `mode` line at the bottom of `Airy.py` to choose what to run.
 
-## Method & implementation
+## Code structure
 
-- Dimensionless grid in units of the Airy lobe width `x₀`, spectral propagator
-  `exp(-i K² dz')` (exact solution of the paraxial equation).
-- Tukey window applied **only once** at injection (lossless free propagation) —
-  a key point to respect energy conservation and Ehrenfest's theorem.
-- Observables computed by spectral integration: center of mass `⟨r⟩(z)` and
-  orbital angular momentum `⟨Lz⟩(z)` (pseudo-spectral derivatives).
+The physics is factored into small, single-purpose helper functions:
 
-## Technologies
+| Function | Role |
+|----------|------|
+| `build_grid_and_propagator` | Dimensionless transverse grid, propagation axis and spectral propagator. |
+| `build_tukey_apod`          | 2D Tukey window that softens the grid edges. |
+| `make_field0`               | Initial truncated Airy field × optical vortex (the only `m`-dependent piece). |
+| `propagate_full`            | Split-step propagation keeping every `z` plane (for viewers and GIFs). |
+| `propagate_track_com`       | Memory-light propagation keeping only `⟨r⟩(z)`. |
+| `compute_oam`               | `⟨Lz⟩/ℏ(z)` from pseudo-spectral derivatives. |
+| `mean_transverse_momentum`  | Analytical drift-velocity prediction from the initial field. |
+| `fit_drift_velocity`        | Linear fit of the trajectory (drift speed + R²). |
+| `params_caption`            | Reproducible-parameters banner drawn on every figure. |
 
-Python 3 · NumPy · SciPy · Matplotlib · Pillow
+The code is fully commented in English, with a reference header at the top of
+`Airy.py` explaining the model, the normalization and the numerical conventions.
 
----
+## Requirements
 
-> The full study also includes reports, a bibliographic review, slides and
-> high-resolution animations. These are not versioned in this repository and are
-> available on request.
+Python 3 with **NumPy**, **SciPy**, **Matplotlib** and **Pillow**.
